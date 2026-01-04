@@ -519,6 +519,31 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Create social sharing buttons
+    const shareButtonsHtml = `
+      <div class="share-buttons">
+        <span class="share-label">Share:</span>
+        <button class="share-button facebook-share tooltip" title="Share on Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          <span class="tooltip-text">Share on Facebook</span>
+        </button>
+        <button class="share-button twitter-share tooltip" title="Share on Twitter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+          </svg>
+          <span class="tooltip-text">Share on Twitter</span>
+        </button>
+        <button class="share-button email-share tooltip" title="Share via Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          <span class="tooltip-text">Share via Email</span>
+        </button>
+      </div>
+    `;
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -528,6 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
+      ${shareButtonsHtml}
       <div class="participants-list">
         <h5>Current Participants:</h5>
         <ul>
@@ -586,6 +612,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handlers for share buttons
+    const facebookShareButton = activityCard.querySelector(".facebook-share");
+    const twitterShareButton = activityCard.querySelector(".twitter-share");
+    const emailShareButton = activityCard.querySelector(".email-share");
+
+    facebookShareButton.addEventListener("click", () => {
+      handleFacebookShare(name, details.description, formattedSchedule);
+    });
+
+    twitterShareButton.addEventListener("click", () => {
+      handleTwitterShare(name, details.description, formattedSchedule);
+    });
+
+    emailShareButton.addEventListener("click", () => {
+      handleEmailShare(name, details.description, formattedSchedule);
+    });
 
     activitiesList.appendChild(activityCard);
   }
@@ -797,6 +840,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     );
+  }
+
+  // Social sharing handler functions
+  function handleFacebookShare(activityName, description, schedule) {
+    const url = window.location.href;
+    const shareText = `Check out ${activityName} at Mergington High School! ${description} Schedule: ${schedule}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(shareText)}`;
+    window.open(facebookUrl, '_blank', 'width=600,height=400');
+  }
+
+  function handleTwitterShare(activityName, description, schedule) {
+    const url = window.location.href;
+    const shareText = `Check out ${activityName} at Mergington High School! ${description} Schedule: ${schedule}`;
+    const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, '_blank', 'width=600,height=400');
+  }
+
+  function handleEmailShare(activityName, description, schedule) {
+    const url = window.location.href;
+    const subject = `Check out ${activityName} at Mergington High School`;
+    const body = `Hi!\n\nI wanted to share this activity with you:\n\nActivity: ${activityName}\nDescription: ${description}\nSchedule: ${schedule}\n\nLearn more: ${url}\n\nBest regards`;
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
   }
 
   // Show message function
