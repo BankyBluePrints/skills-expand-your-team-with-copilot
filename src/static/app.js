@@ -632,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Helper function to set up filter button event listeners
-  function setupFilterButtons(buttons, getCurrentFilter, setFilter) {
+  function setupFilterButtons(buttons, setFilter) {
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
         // Update active class
@@ -659,19 +659,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Add event listeners to day filter buttons
-  setupFilterButtons(dayFilters, () => currentDay, (button) => {
+  setupFilterButtons(dayFilters, (button) => {
     currentDay = button.dataset.day;
     fetchActivities();
   });
 
   // Add event listeners for time filter buttons
-  setupFilterButtons(timeFilters, () => currentTimeRange, (button) => {
+  setupFilterButtons(timeFilters, (button) => {
     currentTimeRange = button.dataset.time;
     fetchActivities();
   });
 
   // Add event listeners for difficulty filter buttons
-  setupFilterButtons(difficultyFilters, () => currentDifficulty, (button) => {
+  setupFilterButtons(difficultyFilters, (button) => {
     currentDifficulty = button.dataset.difficulty;
     fetchActivities();
   });
