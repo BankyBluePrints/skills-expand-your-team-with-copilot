@@ -43,7 +43,7 @@ def get_activities(
     
     if difficulty:
         if difficulty == "all":
-            # "All" means only activities with NO difficulty specified
+            # "Unspecified" means only activities with NO difficulty specified
             query["difficulty"] = {"$exists": False}
         else:
             # Filter by specific difficulty level

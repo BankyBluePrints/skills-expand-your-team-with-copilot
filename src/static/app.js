@@ -631,6 +631,20 @@ document.addEventListener("DOMContentLoaded", () => {
     displayFilteredActivities();
   });
 
+  // Helper function to set up filter button event listeners
+  function setupFilterButtons(buttons, getCurrentFilter, setFilter) {
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        // Update active class
+        buttons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        // Update current filter and fetch activities
+        setFilter(button);
+      });
+    });
+  }
+
   // Add event listeners to category filter buttons
   categoryFilters.forEach((button) => {
     button.addEventListener("click", () => {
@@ -645,42 +659,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Add event listeners to day filter buttons
-  dayFilters.forEach((button) => {
-    button.addEventListener("click", () => {
-      // Update active class
-      dayFilters.forEach((btn) => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      // Update current day filter and fetch activities
-      currentDay = button.dataset.day;
-      fetchActivities();
-    });
+  setupFilterButtons(dayFilters, () => currentDay, (button) => {
+    currentDay = button.dataset.day;
+    fetchActivities();
   });
 
   // Add event listeners for time filter buttons
-  timeFilters.forEach((button) => {
-    button.addEventListener("click", () => {
-      // Update active class
-      timeFilters.forEach((btn) => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      // Update current time filter and fetch activities
-      currentTimeRange = button.dataset.time;
-      fetchActivities();
-    });
+  setupFilterButtons(timeFilters, () => currentTimeRange, (button) => {
+    currentTimeRange = button.dataset.time;
+    fetchActivities();
   });
 
   // Add event listeners for difficulty filter buttons
-  difficultyFilters.forEach((button) => {
-    button.addEventListener("click", () => {
-      // Update active class
-      difficultyFilters.forEach((btn) => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      // Update current difficulty filter and fetch activities
-      currentDifficulty = button.dataset.difficulty;
-      fetchActivities();
-    });
+  setupFilterButtons(difficultyFilters, () => currentDifficulty, (button) => {
+    currentDifficulty = button.dataset.difficulty;
+    fetchActivities();
   });
 
   // Open registration modal
