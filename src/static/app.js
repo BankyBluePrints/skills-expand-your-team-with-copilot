@@ -646,6 +646,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Add event listeners to category filter buttons
+  // Note: Category filtering uses displayFilteredActivities() instead of fetchActivities()
+  // because it's handled client-side, not server-side
   categoryFilters.forEach((button) => {
     button.addEventListener("click", () => {
       // Update active class
