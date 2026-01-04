@@ -36,6 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
       darkModeIcon.textContent = "☀️";
+    } else {
+      darkModeIcon.textContent = "🌙";
     }
   }
 
