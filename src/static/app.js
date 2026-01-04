@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryFilters = document.querySelectorAll(".category-filter");
   const dayFilters = document.querySelectorAll(".day-filter");
   const timeFilters = document.querySelectorAll(".time-filter");
+  const difficultyFilters = document.querySelectorAll(".difficulty-filter");
 
   // Authentication elements
   const loginButton = document.getElementById("login-button");
@@ -70,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
+  let currentDifficulty = "";
 
   // Authentication state
   let currentUser = null;
@@ -94,6 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeTimeFilter) {
       currentTimeRange = activeTimeFilter.dataset.time;
     }
+
+    // Initialize difficulty filter
+    const activeDifficultyFilter = document.querySelector(".difficulty-filter.active");
+    if (activeDifficultyFilter) {
+      currentDifficulty = activeDifficultyFilter.dataset.difficulty;
+    }
   }
 
   // Function to set day filter
@@ -115,8 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to set time range filter
   function setTimeRangeFilter(timeRange) {
     currentTimeRange = timeRange;
-
-    // Update active class
+    fetchActivities();
+    
+    // Update active class on buttons
     timeFilters.forEach((btn) => {
       if (btn.dataset.time === timeRange) {
         btn.classList.add("active");
@@ -124,8 +133,21 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.classList.remove("active");
       }
     });
+  }
 
+  // Function to set difficulty filter
+  function setDifficultyFilter(difficulty) {
+    currentDifficulty = difficulty;
     fetchActivities();
+    
+    // Update active class on buttons
+    difficultyFilters.forEach((btn) => {
+      if (btn.dataset.difficulty === difficulty) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
   }
 
   // Check if user is already logged in (from localStorage)
@@ -422,6 +444,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
+      // Handle difficulty filter
+      if (currentDifficulty) {
+        queryParams.push(`difficulty=${encodeURIComponent(currentDifficulty)}`);
+      }
+
       const queryString =
         queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
       const response = await fetch(`/activities${queryString}`);
@@ -675,7 +702,23 @@ document.addEventListener("DOMContentLoaded", () => {
     displayFilteredActivities();
   });
 
+  // Helper function to set up filter button event listeners
+  function setupFilterButtons(buttons, setFilter) {
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        // Update active class
+        buttons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        // Update current filter and fetch activities
+        setFilter(button);
+      });
+    });
+  }
+
   // Add event listeners to category filter buttons
+  // Note: Category filtering uses displayFilteredActivities() instead of fetchActivities()
+  // because it's handled client-side, not server-side
   categoryFilters.forEach((button) => {
     button.addEventListener("click", () => {
       // Update active class
@@ -689,29 +732,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Add event listeners to day filter buttons
-  dayFilters.forEach((button) => {
-    button.addEventListener("click", () => {
-      // Update active class
-      dayFilters.forEach((btn) => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      // Update current day filter and fetch activities
-      currentDay = button.dataset.day;
-      fetchActivities();
-    });
+  setupFilterButtons(dayFilters, (button) => {
+    currentDay = button.dataset.day;
+    fetchActivities();
   });
 
   // Add event listeners for time filter buttons
-  timeFilters.forEach((button) => {
-    button.addEventListener("click", () => {
-      // Update active class
-      timeFilters.forEach((btn) => btn.classList.remove("active"));
-      button.classList.add("active");
+  setupFilterButtons(timeFilters, (button) => {
+    currentTimeRange = button.dataset.time;
+    fetchActivities();
+  });
 
-      // Update current time filter and fetch activities
-      currentTimeRange = button.dataset.time;
-      fetchActivities();
-    });
+  // Add event listeners for difficulty filter buttons
+  setupFilterButtons(difficultyFilters, (button) => {
+    currentDifficulty = button.dataset.difficulty;
+    fetchActivities();
   });
 
   // Open registration modal
@@ -955,6 +990,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.activityFilters = {
     setDayFilter,
     setTimeRangeFilter,
+    setDifficultyFilter,
   };
 
   // Initialize app
