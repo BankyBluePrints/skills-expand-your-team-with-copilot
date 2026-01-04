@@ -93,8 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to set time range filter
   function setTimeRangeFilter(timeRange) {
     currentTimeRange = timeRange;
-
-    // Update active class
+    fetchActivities();
+    
+    // Update active class on buttons
     timeFilters.forEach((btn) => {
       if (btn.dataset.time === timeRange) {
         btn.classList.add("active");
@@ -102,15 +103,14 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.classList.remove("active");
       }
     });
-
-    fetchActivities();
   }
 
   // Function to set difficulty filter
   function setDifficultyFilter(difficulty) {
     currentDifficulty = difficulty;
-
-    // Update active class
+    fetchActivities();
+    
+    // Update active class on buttons
     difficultyFilters.forEach((btn) => {
       if (btn.dataset.difficulty === difficulty) {
         btn.classList.add("active");
@@ -118,8 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.classList.remove("active");
       }
     });
-
-    fetchActivities();
   }
 
   // Check if user is already logged in (from localStorage)
